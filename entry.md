@@ -475,3 +475,109 @@ module.exports = {
 };
 ``` 
 
+Con esto travis probara automaticamente cada commit o PR de la rama master.
+
+![Master failing]
+(https://iagolast.files.wordpress.com/2017/10/screen-shot-2017-10-29-at-23-20-07.png)
+
+En este caso nos avisa de que los tests están fallando en IE10 por lo que voy a reescribir la webapp para que funcione en todos los navegadores.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <script>
+        var name = 'WORLD'; // No se usa const
+        var helloElement = document.createElement('h1');
+        helloElement.innerText = 'Hello ' + name; // No se usan string literals!
+        document.body.appendChild(helloElement);
+    </script>
+</body>
+
+</html>
+``` 
+
+
+Tras estos cambios vuelvo a ejecutar mis pruebas en local:
+
+```bash
+ yarn test
+yarn run v1.2.1
+$ nightwatch --env default,ie11,edge15,firefox55
+Started child process for: default environment 
+Started child process for: ie11 environment 
+Started child process for: edge15 environment 
+Started child process for: firefox55 environment 
+
+  >> default environment finished.  
+
+
+  >> firefox55 environment finished.  
+
+
+  >> ie11 environment finished.  
+
+
+  >> edge15 environment finished.  
+
+ default   [Basic] Test Suite
+======================
+ default   
+ default   Results for:  basicTest
+ default   ✔ Element <body> was visible after 1009 milliseconds.
+ default   ✔ Expected element <h1> to be present
+ default   ✔ Expected element <h1> text to equal: "Hello WORLD"
+ default   OK. 3 assertions passed. (7.259s)
+ default   [Sauce Feedback] Test Suite
+===============================
+ default   
+ default   OK. 3  total assertions passed. (8.641s)
+ ie11   [Basic] Test Suite
+======================
+ ie11   
+ ie11   Results for:  basicTest
+ ie11   ✔ Element <body> was visible after 1086 milliseconds.
+ ie11   ✔ Expected element <h1> to be present
+ ie11   ✔ Expected element <h1> text to equal: "Hello WORLD"
+ ie11   OK. 3 assertions passed. (13.08s)
+ ie11   [Sauce Feedback] Test Suite
+===============================
+ ie11   
+ ie11   OK. 3  total assertions passed. (14.456s)
+ edge15   [Basic] Test Suite
+======================
+ edge15   
+ edge15   Results for:  basicTest
+ edge15   ✔ Element <body> was visible after 1013 milliseconds.
+ edge15   ✔ Expected element <h1> to be present
+ edge15   ✔ Expected element <h1> text to equal: "Hello WORLD"
+ edge15   OK. 3 assertions passed. (20.44s)
+ edge15   [Sauce Feedback] Test Suite
+===============================
+ edge15   
+ edge15   OK. 3  total assertions passed. (21.878s)
+ firefox55   [Basic] Test Suite
+======================
+ firefox55   
+ firefox55   Results for:  basicTest
+ firefox55   ✔ Element <body> was visible after 1124 milliseconds.
+ firefox55   ✔ Expected element <h1> to be present
+ firefox55   ✔ Expected element <h1> text to equal: "Hello WORLD"
+ firefox55   OK. 3 assertions passed. (11.573s)
+ firefox55   [Sauce Feedback] Test Suite
+===============================
+ firefox55   
+ firefox55   OK. 3  total assertions passed. (12.949s)
+✨  Done in 22.57s.
+```
+Y tal y como esperabamos, la web app funciona perfectamente en los 4 navegadores.
