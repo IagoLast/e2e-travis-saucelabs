@@ -133,3 +133,83 @@ Con esto instalado podemos ejecutar los tests, para ello en una pestaña del ter
     selenium-server
 
 
+Y con esto ya podemos ejecutar `nightwatch`, que controlará nuestro chrome y ejecutará los tests de forma automática.
+
+```bash
+MacBook-Pro-de-CARTO:e2e-travis-saucelabs iago$ $(npm bin)/nightwatch
+
+[Basic] Test Suite
+======================
+
+Running:  basicTest
+ ✔ Element <body> was visible after 45 milliseconds.
+ ✔ Expected element <h1> to be present
+ ✔ Expected element <h1> text to equal: "Hello WORLD"
+
+OK. 3 assertions passed. (1.363s)
+```
+
+## Sauce Labs
+
+Sauce labs es una herramienta gratis para open source que nos permite ejecutar pruebas de selenium contra diferentes plataformas de forma moderadamente sencilla.
+
+
+
+### Configurando usuario y contraseña
+
+Para utilizar `sauce-labs` tendremos que crearnos una cuenta, y editar nuestro archivo de configuración de nightwatch añadiendo
+el puerto, el host y nuestro usuario y api-key.
+
+Para **NO subir claves secretas a github** guardo mis variables de entorno en un archivo `.env` y las cargo mediante `dotenv` 
+
+
+```javascript
+require('dotenv').config(); // Carga la informacion secreta.
+
+module.exports = {
+    src_folders: ['test'], // Array de carpetas donde se encuentran los tests
+    test_settings: {
+        default: {
+            desiredCapabilities: {
+                browserName: 'chrome', // Navegador que va a ser controlado
+            },
+            selenium_port: 80, // Puerto en el que sauce sirve selenium
+            selenium_host: 'ondemand.saucelabs.com', // Url de saucelabs
+            username: process.env.SAUCE_USERNAME, // Nombre de usuario de saucelabs
+            access_key: process.env.SAUCE_ACCESS_KEY, // Api key de sauce labs
+        },
+    }
+};
+```
+
+### sauce-connect
+
+Como nuestro servidor web esta en nuestra máquina local y no es accesible desde el exterior, necesitamos comunicar los servidores de 
+sauce con nuestra web-app, para ello utilizaremos [sauce connect](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy), hay que bajarse el binario  y ejecutarlo pasandole como parametros usuario y api-key
+
+    bin/sc -u <SAUCE_USERNAME> -k <SAUCE_ACCESS_KEY>
+
+Si se ha ejecutado correctamente veremos que hay un tunel activo en el dashboard de `sauce`.
+
+![Tunel activo]
+(https://iagolast.files.wordpress.com/2017/10/screen-shot-2017-10-29-at-22-34-43.png)
+
+Si ejecutamos de nuevo `nightwatch` este se ejecutará contra los servidores de sauce.
+
+
+```bash
+
+$(npm bin)/nightwatch
+
+[Basic] Test Suite
+======================
+
+Running:  basicTest
+ ✔ Element <body> was visible after 1013 milliseconds.
+ ✔ Expected element <h1> to be present
+ ✔ Expected element <h1> text to equal: "Hello WORLD"
+
+OK. 3 assertions passed. (6.88s)
+
+
+```
