@@ -9,6 +9,7 @@
   "devDependencies": {
     "dotenv": "^4.0.0",
     "nightwatch": "^0.9.16",
+    "request": "^2.83.0",
     "serve": "^6.3.1"
   }
 }

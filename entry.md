@@ -330,3 +330,69 @@ Started child process for: firefox55 environment
 
 ```
 En menos de 12 segundos, hemos probado nuestra app en 4 navegadores diferentes y internet explorer 10 ha fallado por que entre otras cosas no tiene soporte para los string literals que utilizamos en nuestra web-app.
+
+## Notificando a sauce el resultado
+
+En el dashboard de sauce labs, podemos ver nuestros tests en los 4 navegadores, sin embargo no tenemos ningun tipo de feedback acerca de su han sido exitosos o no.
+
+![Sauce panel]
+(https://iagolast.files.wordpress.com/2017/10/screen-shot-2017-10-29-at-22-50-41.png)
+
+
+Se puede utilizar la [REST API](https://wiki.saucelabs.com/display/DOCS/Job+Methods) de saucelabs para actualizar la información de los jobs (tests) desde nightwatch. Para ello vamos a crear un pequeño snippet llamado `sauce-feedback.js`
+
+
+```javascript
+var request = require('request');
+
+function uploadSauceResults(browser, done) {
+  // Finish browser session;
+  browser.end();
+
+  var user = browser.options.username;
+  var key = browser.options.accessKey;
+  var jobId = browser.sessionId;
+  var passed = browser.currentTest.results.failed === 0;
+
+  if (user && key && jobId) {
+    var url = 'https://saucelabs.com/rest/v1/' + user + '/jobs/' + jobId;
+    return request.put({
+      url: url,
+      auth: { username: user, password: key },
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ passed: passed })
+    }, done);
+  } else {
+    console.warn('No user/key/jobId provided.');
+    done();
+  }
+}
+
+module.exports = uploadSauceResults;
+```
+
+Y lo vamos a utilizar en nuestro `basic.js` test.
+
+```javascript
+// basic.js
+const after = require('./sauce-feedback');
+module.exports = {
+    basicTest: function (browser) { // Define a simple test
+        // Navigate to web-app url
+        browser.url('http://localhost:5000');
+        // Wait the page to be loaded
+        browser.waitForElementVisible('body', 1000);
+        // Expect to have a h1 element
+        browser.expect.element('h1').to.be.present;
+        // Expect the element to have text Hello WORLD
+        browser.expect.element('h1').text.to.equal('Hello WORLD');
+    },
+    after: after,
+};
+```
+
+Si vemos ahora el dashboard despues de ejecutar los tests, observamos los ticks verdes. (Por algun motivo que desconozco IE se muestra como completado en lugar de "error", pero algo es algo! ).
+
+![Sauce Dashboard]
+(https://iagolast.files.wordpress.com/2017/10/screen-shot-2017-10-29-at-22-58-23.png)
+
