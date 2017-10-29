@@ -1,3 +1,7 @@
+# E2E testing con Travis,NightWatch y SauceLabs
+
+https://github.com/IagoLast/e2e-travis-saucelabs
+
 Normalmente no pienso en la compatibilidad entre navegadores de mis side-projects y los haga por diversión y para aprender algo por lo que con que funcionen en mi máquina me llega.
 
 Por desgracia el mundo laboral es más complicado y si queremos ser medianamente serios lo mínimo que deberíamos dar es una **lista de navegadores compatibles**.
@@ -63,7 +67,7 @@ Con el comando `serve` creo un servidor web que sirve el `index.html` de mi web-
 
 Efectivamente, abriendo chrome en `http://localhost:5000` puedo ver mi aplicación funcionando correctamente
 
-<img src="https://iagolast.files.wordpress.com/2017/10/chrome.png"/>
+<img src="https://iagolast.files.wordpress.com/2017/10/screen-shot-2017-10-29-at-21-54-31.png"/>
 
 
 
@@ -577,3 +581,18 @@ Started child process for: firefox55 environment
 ✨  Done in 22.57s.
 ```
 Y tal y como esperabamos, la web app funciona perfectamente en los 4 navegadores.
+
+
+## Resumen
+
+Hemos montado un entorno que nos permite probar aplicaciones web de forma automática en múltiples navegadores. SauceLabs nos permite también elegir las plataformas sobre las que corren esos navegadores (windows, osx) e incluso permite dispositivos móviles.
+
+Ese entorno se puede configurar junto a travis para probar de forma automática cada commit o Pull request de forma individual.
+
+
+## Referencias
+
+- [https://saucelabs.com/] (https://saucelabs.com/)
+- [http://nightwatchjs.org/](http://nightwatchjs.org/)
+- [https://docs.travis-ci.com/user/sauce-connect/](https://docs.travis-ci.com/user/sauce-connect/)
+- [https://medium.com/@mikaelberg/zero-to-hero-with-end-to-end-tests-using-nightwatch-saucelabs-and-travis-e932c8deb695](https://medium.com/@mikaelberg/zero-to-hero-with-end-to-end-tests-using-nightwatch-saucelabs-and-travis-e932c8deb695)
