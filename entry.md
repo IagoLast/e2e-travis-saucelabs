@@ -61,11 +61,11 @@ Con el comando `serve` creo un servidor web que sirve el `index.html` de mi web-
 
 ```
 
-Efectivamente, abriendo chrome en `http://localhost:5000` puedo ver mi aplicación funcionando correctamente.
+Efectivamente, abriendo chrome en `http://localhost:5000` puedo ver mi aplicación funcionando correctamen
 
 ![Screenshot 1]
 (https://iagolast.files.wordpress.com/2017/10/chrome.png)
-<img src="https://iagolast.files.wordpress.com/2017/10/chrome.png" alt="chrome.png" width="681" height="335" class="alignnone size-full wp-image-799"/>
+
 
 
 ## Configurando Nightwatch.js
@@ -190,6 +190,7 @@ sauce con nuestra web-app, para ello utilizaremos [sauce connect](https://wiki.s
     bin/sc -u <SAUCE_USERNAME> -k <SAUCE_ACCESS_KEY>
 
 Si se ha ejecutado correctamente veremos que hay un tunel activo en el dashboard de `sauce`.
+
 
 ![Tunel activo]
 (https://iagolast.files.wordpress.com/2017/10/screen-shot-2017-10-29-at-22-34-43.png)
@@ -391,7 +392,7 @@ module.exports = {
 };
 ```
 
-Si vemos ahora el dashboard despues de ejecutar los tests, observamos los ticks verdes. (Por algun motivo que desconozco IE se muestra como completado en lugar de "error", pero algo es algo! ).
+Si vemos ahora el dashboard despues de ejecutar los tests, observamos los ticks verdes. (Por algun motivo que desconozco IE se muestra como completado en lugar de "error", pero algo es algo! )
 
 ![Sauce Dashboard]
 (https://iagolast.files.wordpress.com/2017/10/screen-shot-2017-10-29-at-22-58-23.png)
@@ -475,7 +476,7 @@ module.exports = {
 };
 ``` 
 
-Con esto travis probara automaticamente cada commit o PR de la rama master.
+Con esto travis probara automaticamente cada commit o PR de la rama maste
 
 ![Master failing]
 (https://iagolast.files.wordpress.com/2017/10/screen-shot-2017-10-29-at-23-20-07.png)
