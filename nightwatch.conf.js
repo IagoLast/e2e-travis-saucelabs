@@ -12,5 +12,24 @@ module.exports = {
             username: process.env.SAUCE_USERNAME, // Nombre de usuario de saucelabs
             access_key: process.env.SAUCE_ACCESS_KEY, // Api key de sauce labs
         },
+        // Añadimos diferentes navegadores para probar
+        firefox55: {
+            desiredCapabilities: {
+                browserName: 'firefox',
+                version: 55,
+            }
+        },
+        ie11: {
+            desiredCapabilities: {
+                browserName: 'internet explorer',
+                version: 11
+            }
+        },
+        edge15: {
+            desiredCapabilities: {
+                browserName: 'MicrosoftEdge',
+                version: 15,
+            }
+        },
     }
 };

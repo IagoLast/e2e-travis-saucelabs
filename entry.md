@@ -213,3 +213,120 @@ OK. 3 assertions passed. (6.88s)
 
 
 ```
+
+## Configurando diferentes navegadores
+
+La gracia de todo esto es que con unos pequeños cambios en el archivo de configuracion de nightwatch, podemos
+ejecutar nuestras pruebas contra diferentes navegadores.
+
+    - Firefox55
+    - Internet explorer 11
+    - MS Edge 15
+
+```javascript
+require('dotenv').config(); // Carga la informacion secreta.
+
+module.exports = {
+    src_folders: ['test'], // Array de carpetas donde se encuentran los tests
+    test_settings: {
+        default: {
+            desiredCapabilities: {
+                browserName: 'chrome', // Navegador que va a ser controlado
+            },
+            selenium_port: 80, // Puerto en el que sauce sirve selenium
+            selenium_host: 'ondemand.saucelabs.com', // Url de saucelabs
+            username: process.env.SAUCE_USERNAME, // Nombre de usuario de saucelabs
+            access_key: process.env.SAUCE_ACCESS_KEY, // Api key de sauce labs
+        },
+        // Añadimos diferentes navegadores para probar
+        firefox55: {
+            desiredCapabilities: {
+                browserName: 'firefox',
+                version: 55,
+            }
+        },
+        ie11: {
+            desiredCapabilities: {
+                browserName: 'internet explorer',
+                version: 11
+            }
+        },
+        edge15: {
+            desiredCapabilities: {
+                browserName: 'MicrosoftEdge',
+                version: 15,
+            }
+        },
+    }
+};
+```
+
+Para ejecutar las pruebas, debemos pasarle el nombre de los entornos al parametro `env` de nightwatch
+
+```bash
+
+$(npm bin)/nightwatch --env default,ie11,edge15,firefox55
+Started child process for: default environment 
+Started child process for: ie11 environment 
+Started child process for: edge15 environment 
+Started child process for: firefox55 environment 
+
+  >> default environment finished.  
+
+
+  >> firefox55 environment finished.  
+
+
+  >> ie11 environment finished.  
+
+
+  >> edge15 environment finished.  
+
+ default   [Basic] Test Suite
+======================
+ default   
+ default   Results for:  basicTest
+ default   ✔ Element <body> was visible after 1065 milliseconds.
+ default   ✔ Expected element <h1> to be present
+ default   ✔ Expected element <h1> text to equal: "Hello WORLD"
+ default   OK. 3 assertions passed. (7.634s)
+ default   
+ ie11   [Basic] Test Suite
+======================
+ ie11   
+ ie11   Results for:  basicTest
+ ie11   ✔ Element <body> was visible after 1094 milliseconds.
+ ie11   ✖ Expected element <h1> to be present - element was not found  - expected "present" but got: "not present"
+ ie11       at Object.basicTest (/Users/iago/Workspace/personal/e2e-travis-saucelabs/test/basic.js:8:20)
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+ ie11   FAILED:  1 assertions failed and 1 passed (17.289s)
+ ie11   
+ ie11    _________________________________________________
+ ie11   TEST FAILURE:  1 assertions failed, 1 passed. (17.416s)
+ ie11    ✖ basic
+ ie11   - basicTest (17.289s)
+ ie11      Expected element <h1> to be present - element was not found  - expected "present" but got: "not present"
+ ie11          at Object.basicTest (/Users/iago/Workspace/personal/e2e-travis-saucelabs/test/basic.js:8:20)
+       at _combinedTickCallback (internal/process/next_tick.js:67:7)
+ ie11   
+ edge15   [Basic] Test Suite
+======================
+ edge15   
+ edge15   Results for:  basicTest
+ edge15   ✔ Element <body> was visible after 1183 milliseconds.
+ edge15   ✔ Expected element <h1> to be present
+ edge15   ✔ Expected element <h1> text to equal: "Hello WORLD"
+ edge15   OK. 3 assertions passed. (20.673s)
+ edge15   
+ firefox55   [Basic] Test Suite
+======================
+ firefox55   
+ firefox55   Results for:  basicTest
+ firefox55   ✔ Element <body> was visible after 1039 milliseconds.
+ firefox55   ✔ Expected element <h1> to be present
+ firefox55   ✔ Expected element <h1> text to equal: "Hello WORLD"
+ firefox55   OK. 3 assertions passed. (11.596s)
+ firefox55   
+
+```
+En menos de 12 segundos, hemos probado nuestra app en 4 navegadores diferentes y internet explorer 10 ha fallado por que entre otras cosas no tiene soporte para los string literals que utilizamos en nuestra web-app.
