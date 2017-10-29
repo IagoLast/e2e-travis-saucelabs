@@ -11,5 +11,9 @@
     "nightwatch": "^0.9.16",
     "request": "^2.83.0",
     "serve": "^6.3.1"
+  },
+  "scripts": {
+    "test": "nightwatch --env default,ie11,edge15,firefox55",
+    "serve": "serve"
   }
 }

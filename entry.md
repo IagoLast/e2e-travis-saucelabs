@@ -396,3 +396,82 @@ Si vemos ahora el dashboard despues de ejecutar los tests, observamos los ticks 
 ![Sauce Dashboard]
 (https://iagolast.files.wordpress.com/2017/10/screen-shot-2017-10-29-at-22-58-23.png)
 
+
+## Integración con Travis.
+
+Sería genial poder correr estos tests en nuestro sistema de integración continua, para probar de forma automática cada PR/commit.
+
+Para ello crearemos un archivo `travis.yml`
+
+```yaml
+language: node_js
+
+node_js:
+  - 8
+
+cache: yarn
+
+addons:
+  sauce_connect: true
+
+before_script:
+  - yarn serve &
+```
+
+Por defecto travis utiliza los npm scripts para la CI por lo que habra que actualizar el `package.json` y añadir dos comandos, `test` y `serve` 
+
+```javascript
+// package.json
+
+"scripts": {
+    "test": "nightwatch --env default,ie11,edge15,firefox55",
+    "serve": "serve"
+}
+```
+
+El addon `sauce_connect` requiere que esten definidas en travis las variables de entorno para el `SAUCE_ USERNAME` y el `SAUCE_ACCESS_KEY` la forma más sencilla es [definirlas en el cliente web](https://docs.travis-ci.com/user/environment-variables/#Defining-Variables-in-Repository-Settings)
+
+También tenemos que actualizar el nighwatch.conf.js con la informacion del `build` y el `tunel-id`.
+
+
+```javascript
+// nightwatch.conf.js
+const TRAVIS_JOB_NUMBER = process.env.TRAVIS_JOB_NUMBER; // Variable de entorno definida automaticamente por travis
+require('dotenv').config();
+
+module.exports = {
+    src_folders: ['test'],
+    test_settings: {
+        default: {
+            desiredCapabilities: {
+                browserName: 'chrome',
+                build: `build-${TRAVIS_JOB_NUMBER}`, // <----- importante para travis
+                'tunnel-identifier': TRAVIS_JOB_NUMBER, // <----- importante para travis
+            },
+            selenium_port: 80,
+            selenium_host: 'ondemand.saucelabs.com',
+            username: process.env.SAUCE_USERNAME,
+            access_key: process.env.SAUCE_ACCESS_KEY,
+        },
+        firefox55: {
+            desiredCapabilities: {
+                browserName: 'firefox',
+                version: 55,
+            }
+        },
+        ie11: {
+            desiredCapabilities: {
+                browserName: 'internet explorer',
+                version: 11
+            }
+        },
+        edge15: {
+            desiredCapabilities: {
+                browserName: 'MicrosoftEdge',
+                version: 15,
+            }
+        },
+    }
+};
+``` 
+

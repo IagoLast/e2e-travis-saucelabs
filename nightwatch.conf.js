@@ -1,18 +1,20 @@
-require('dotenv').config(); // Carga la informacion secreta.
+const TRAVIS_JOB_NUMBER = process.env.TRAVIS_JOB_NUMBER; // Variable de entorno definida automaticamente por travis
+require('dotenv').config();
 
 module.exports = {
-    src_folders: ['test'], // Array de carpetas donde se encuentran los tests
+    src_folders: ['test'],
     test_settings: {
         default: {
             desiredCapabilities: {
-                browserName: 'chrome', // Navegador que va a ser controlado
+                browserName: 'chrome',
+                build: `build-${TRAVIS_JOB_NUMBER}`, // <----- importante para travis
+                'tunnel-identifier': TRAVIS_JOB_NUMBER, // <----- importante para travis
             },
-            selenium_port: 80, // Puerto en el que sauce sirve selenium
-            selenium_host: 'ondemand.saucelabs.com', // Url de saucelabs
-            username: process.env.SAUCE_USERNAME, // Nombre de usuario de saucelabs
-            access_key: process.env.SAUCE_ACCESS_KEY, // Api key de sauce labs
+            selenium_port: 80,
+            selenium_host: 'ondemand.saucelabs.com',
+            username: process.env.SAUCE_USERNAME,
+            access_key: process.env.SAUCE_ACCESS_KEY,
         },
-        // Añadimos diferentes navegadores para probar
         firefox55: {
             desiredCapabilities: {
                 browserName: 'firefox',

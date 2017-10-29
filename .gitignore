@@ -58,4 +58,4 @@ typings/
 .env
 
 # Test outputs
-tests_output
+tests_output/
