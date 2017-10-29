@@ -1,0 +1,13 @@
+{
+  "name": "e2e-travis-saucelabs",
+  "version": "1.0.0",
+  "description": "Sample project to show e2e testing using Travis, Nightwatch.js and Saucelabs",
+  "main": "index.js",
+  "repository": "git@github.com:IagoLast/e2e-travis-saucelabs.git",
+  "author": "IagoLast <iago.lastra@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "nightwatch": "^0.9.16",
+    "serve": "^6.3.1"
+  }
+}
